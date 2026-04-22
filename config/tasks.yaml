@@ -1,0 +1,46 @@
+plan_travel_itinerary:
+  description: >
+    Expand the travel itinerary for a client based on their destination, travel dates, and expected duration.
+    You MUST provide recommendations using actual data for activities, safety tips, hotels, and budget options for both low and high budgets.
+
+    **Parameters**
+    - destination: {destination}
+    - trip_date: {trip_date}
+    - trip_duration: {trip_duration}
+
+  expected_output: >
+    A detailed travel itinerary that includes:
+    - A list of recommended activities, hotels, and attractions in the destination city, categorized by low budget and high budget options.
+    - Safety tips for travelers visiting the destination city.
+    - Estimated costs for each activity and overall expected trip expenses for both low and high budget options.
+    
+  agent: travel_specialist
+
+select_city:
+  description: >
+    Select the best cities for a client based on their preferences, nearby attractions, and provide recommendations for activities, safety tips, and budget options.
+
+    **Parameters**
+    - preferences: {preferences}
+
+  expected_output: >
+    A list of recommended cities that match the client's preferences, along with a brief description of each city, nearby attractions, safety tips,
+    and budget options for activities and accommodations.
+
+  agent: city_selection
+
+local_insights:
+  description: >
+    Provide insider tips and recommendations for a client visiting the city, including must-see attractions, local cuisine, safety tips, and budget-friendly options.
+
+    **Parameters**
+    - city: {city}
+
+  expected_output: >
+    A comprehensive guide for the client visiting the city, including:
+    - A list of must-see attractions and hidden gems in the city.
+    - Recommendations for local cuisine and dining options.
+    - Safety tips for navigating the city.
+    - Budget-friendly options for activities and accommodations.
+
+  agent: local_expert

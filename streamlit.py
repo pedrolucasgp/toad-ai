@@ -16,7 +16,7 @@ st.markdown(
         <div style=" display: flex; justify-content: center; align-items: center; margin: 20px; gap: 20px;">
             <img src={toad} width="60">
         </div>
-        <h5>Olá tursita! Sou o Toad! Serei seu assistente em planejamento de viagens!</h5><br><br>
+        <h5>Olá turista! Sou o Toad! Serei seu assistente em planejamento de viagens!</h5><br><br>
     </div>
     """, unsafe_allow_html=True)
 
@@ -31,9 +31,6 @@ if prompt := st.chat_input("Digite as informações da viagem aqui..."):
     st.chat_message("user", avatar=user).write(prompt)
 
     with st.spinner('Toad está pensando...'):
-        # response = chatbot_interaction(prompt)
-        # response = "Teste: " + prompt 
-
         response = run_crew(prompt)
         st.session_state["messages"].append({"role": "assistant", "content": response})
-    st.chat_message("assistant", avatar=avatar).write(response)
+    st.chat_message("assistant", avatar=avatar).write(response.raw)

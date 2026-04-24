@@ -1,9 +1,10 @@
-from crewai import Agent, Crew, Task, LLM
+from crewai import Agent, Crew, Task, LLM, Process
 from crewai.project import CrewBase, agent, crew, task
 
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,10 +13,12 @@ scrape_tool = ScrapeWebsiteTool()
 serper_tool = SerperDevTool()
 
 llm = LLM(
-    model="gemini-2.5-flash",
+    model="azure/gpt-4o-2024-11-20",
     temperature=0.2,
-    max_tokens=4000,
-    api_key=os.getenv("GEMINI_API_KEY")
+    max_tokens=2000,
+    api_key=os.getenv("AZURE_API_KEY"),
+    api_base=os.getenv("AZURE_API_BASE"),
+    api_version=os.getenv("AZURE_API_VERSION")
 )
 
 @CrewBase
@@ -32,29 +35,19 @@ class TravelCrew():
         )
     
     @agent
-    def travel_specialist(self) -> Agent:
+    def destination_expert(self) -> Agent:
         return Agent(
-            config=self.agents_config['travel_specialist'],
+            config=self.agents_config['destination_expert'],
             verbose=True,
             tools=[serper_tool, scrape_tool],
             llm=llm
         )
     
     @agent
-    def city_selection(self) -> Agent:
+    def toad(self) -> Agent:
         return Agent(
-            config=self.agents_config['city_selection'],
+            config=self.agents_config['toad'],
             verbose=True,
-            tools=[serper_tool, scrape_tool],
-            llm=llm
-        )
-    
-    @agent
-    def local_expert(self) -> Agent:
-        return Agent(
-            config=self.agents_config['local_expert'],
-            verbose=True,
-            tools=[serper_tool, scrape_tool],
             llm=llm
         )
     
@@ -63,23 +56,23 @@ class TravelCrew():
         return Task(config=self.tasks_config['input_analyzer'])
     
     @task
-    def travel_specialist_task(self) -> Task:
-        return Task(config=self.tasks_config['plan_travel_itinerary'])
+    def destination_expert_task(self) -> Task:
+        task = Task(config=self.tasks_config['destination_expert_comprehensive'])
+        return task
     
     @task
-    def city_selection_task(self) -> Task:
-        return Task(config=self.tasks_config['select_city'])
-    
-    @task
-    def local_expert_task(self) -> Task:
-        return Task(config=self.tasks_config['local_insights'])
+    def toad_compilation_task(self) -> Task:
+        task = Task(config=self.tasks_config['toad_compilation'])
+        task.context = [self.destination_expert_task()]
+        return task
 
 
     @crew
     def travel_planning_crew(self) -> Crew:
         return Crew(
-            agents=[self.input_analyzer(), self.travel_specialist(), self.city_selection(), self.local_expert()],
-            tasks=[self.input_analyzer_task(), self.travel_specialist_task(), self.city_selection_task(), self.local_expert_task()],
+            agents=[self.input_analyzer(), self.destination_expert(), self.toad()],
+            tasks=[self.input_analyzer_task(), self.destination_expert_task(), self.toad_compilation_task()],
             llm=llm,
-            verbose=True
+            verbose=True,
+            process=Process.sequential
         )

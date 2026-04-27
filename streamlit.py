@@ -6,7 +6,7 @@ user = "./assets/img/yoshi.png"
 toad = "https://static.wikia.nocookie.net/characterprofile/images/2/2d/Toad_Mario_Party_10.png/revision/latest?cb=20210904032011"
 
 st.set_page_config(
-    page_title="Toad",
+    page_title="Toad - Guia de Viagens",
     page_icon=avatar
     )
 
@@ -32,5 +32,8 @@ if prompt := st.chat_input("Digite as informações da viagem aqui..."):
 
     with st.spinner('Toad está pensando...'):
         response = run_crew(prompt)
-        st.session_state["messages"].append({"role": "assistant", "content": response})
-    st.chat_message("assistant", avatar=avatar).write(response.raw)
+        
+        response_text = str(response) if response else "Desculpe, houve um erro."
+        
+        st.session_state["messages"].append({"role": "assistant", "content": response_text})
+    st.chat_message("assistant", avatar=avatar).write(response_text)

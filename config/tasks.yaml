@@ -5,8 +5,9 @@ input_analyzer:
   expected_output: >
     A structured output containing the extracted information from the user input, including:
     - destination: The location the user intends to travel to.
-    - trip_date: The dates of the user's trip.
+    - trip_date: The dates of the user's trip always consider brazilian date format (DD/MM/YYYY).
     - trip_duration: The expected duration of the user's trip.
+    - interests: Any specific interests or preferences mentioned by the user.
   agent: input_analyzer
 
 destination_expert_comprehensive:
@@ -14,11 +15,11 @@ destination_expert_comprehensive:
     Create a focused travel itinerary for the destination provided. Use web search to find current data.
     
     DO THIS IN ORDER (limit to 3 searches max):
-    1. Search for top attractions, activities, and practical info about the destination
+    1. Search for top attractions, activities, and practical info about the destination considering the user's interests and trip duration if provided.
     2. Search for accommodation options (hotels, hostels) with price ranges for low and high budgets
     3. Search for safety tips, best time to visit, and transportation info
     
-    Include: activities/attractions, 2 accommodation options (budget/luxury), costs, safety tips, and local tips.
+    Include: activities/attractions, 4 accommodation options (budget/luxury), costs, safety tips, and local tips.
     Keep responses concise and actionable. Do NOT make multiple searches for the same topic.
   expected_output: >
     A focused travel guide with:
@@ -35,7 +36,6 @@ toad_compilation:
     
     You have already received a complete travel plan from the destination_expert with all the details, recommendations, itineraries, budgets, and safety information.
     Your job is to format and present this information in a clear, user-friendly way that matches the client's preferences.
-    Do NOT ask questions or request additional information - just format and organize the information you have received.
   expected_output: >
     A well-structured, user-friendly travel guide that synthesizes the insights from the destination expert into a cohesive format.
     The guide should be easy to read and navigate, providing clear sections for each aspect of the travel plan, and should be tailored to the client's preferences and needs.
